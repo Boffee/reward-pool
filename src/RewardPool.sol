@@ -53,8 +53,9 @@ contract RewardPool is ERC20, Ownable {
     }
 
     /// @dev Extract rewards for account.
-    function extract() external {
-        _extract(msg.sender);
+    /// @param account Receiver of rewards.
+    function extract(address account) external {
+        _extract(account);
     }
 
     /// @notice Update pool info to the current timestamp.
