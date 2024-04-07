@@ -2,13 +2,14 @@
 pragma solidity >=0.8.0;
 
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC20, ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 /// @title Reward Pool
 /// @author boffee
 /// @author Modified from MasterChef V2 (https://github.com/1coinswap/core/blob/master/contracts/MasterChefV2.sol)
 /// @notice This contract is used to manage reward pool.
-contract RewardPool is ERC20 {
+contract RewardPool is ERC20, Ownable {
     IERC20 public immutable stakeToken;
     IERC20 public immutable rewardToken;
 
@@ -18,8 +19,9 @@ contract RewardPool is ERC20 {
 
     mapping(address => int256) internal _debts;
 
-    constructor(string memory name, string memory symbol, address _stakeToken, address _rewardToken)
+    constructor(string memory name, string memory symbol, address _stakeToken, address _rewardToken, address owner)
         ERC20(name, symbol)
+        Ownable(owner)
     {
         stakeToken = IERC20(_stakeToken);
         rewardToken = IERC20(_rewardToken);
@@ -65,6 +67,12 @@ contract RewardPool is ERC20 {
         }
     }
 
+    /// @notice Update the given pool's reward rate.
+    /// @param _emissionRate New emission rate of the pool.
+    function setEmissionRate(uint256 _emissionRate) external onlyOwner {
+        emissionRate = _emissionRate;
+    }
+
     /// @dev update debt balance on mint, burn, and transfer
     function _update(address from, address to, uint256 value) internal virtual override {
         super._update(from, to, value);
@@ -102,11 +110,5 @@ contract RewardPool is ERC20 {
 
         _debts[account] = int128(accumulatedReward);
         rewardToken.transferFrom(address(this), account, pendingReward);
-    }
-
-    /// @notice Update the given pool's reward rate.
-    /// @param emissionRate_ New emission rate of the pool.
-    function _setEmissionRate(uint256 emissionRate_) internal {
-        emissionRate = emissionRate_;
     }
 }
