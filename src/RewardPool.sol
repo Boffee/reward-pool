@@ -50,6 +50,11 @@ contract RewardPool is ERC20 {
         _burn(msg.sender, amount);
     }
 
+    /// @dev Extract rewards for account.
+    function extract() external {
+        _extract(msg.sender);
+    }
+
     /// @notice Update pool info to the current timestamp.
     function updatePool() public {
         if (block.timestamp > lastUpdatedTimestamp) {
