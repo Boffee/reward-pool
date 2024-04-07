@@ -104,13 +104,4 @@ contract RewardPool is ERC20 {
     function _setEmissionRate(uint256 emissionRate_) internal {
         emissionRate = emissionRate_;
     }
-
-    /// @notice Add reward token to the pool
-    /// @param account The account that sends the reward.
-    /// @param amount The amount of reward to be added.
-    function _addReward(address account, uint256 amount) internal {
-        require(lastUpdatedTimestamp != 0, "Pool does not exist");
-
-        rewardToken.transferFrom(account, address(this), amount);
-    }
 }
