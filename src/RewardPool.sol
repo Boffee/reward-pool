@@ -38,21 +38,21 @@ contract RewardPool is ERC20, Ownable {
         return uint256(int256((balanceOf(account) * _emissionPerShare) / 1e18) - _debts[account]);
     }
 
-    /// @dev stake token and get pool token.
+    /// @notice stake token and get pool token.
     /// @param amount The amount of token to be staked.
     function mint(uint256 amount) external {
         stakeToken.transferFrom(msg.sender, address(this), amount);
         _mint(msg.sender, amount);
     }
 
-    /// @dev burn pool token and get stake token.
+    /// @notice burn pool token and get stake token.
     /// @param amount The amount of token to be burned.
     function burn(uint256 amount) external {
         stakeToken.transfer(msg.sender, amount);
         _burn(msg.sender, amount);
     }
 
-    /// @dev Extract rewards for account.
+    /// @notice Extract rewards for account.
     /// @param account Receiver of rewards.
     function extract(address account) external {
         _extract(account);
@@ -68,7 +68,7 @@ contract RewardPool is ERC20, Ownable {
         }
     }
 
-    /// @notice Update the given pool's reward rate.
+    /// @dev Update the given pool's reward rate.
     /// @param _emissionRate New emission rate of the pool.
     function setEmissionRate(uint256 _emissionRate) external onlyOwner {
         emissionRate = _emissionRate;
@@ -85,7 +85,7 @@ contract RewardPool is ERC20, Ownable {
         super._update(from, to, value);
     }
 
-    /// @notice Stake amount under account to pool for reward allocation.
+    /// @dev Stake amount under account to pool for reward allocation.
     /// @param account The receiver of reward allocations.
     /// @param amount The amount of token staked.
     function _stake(address account, uint256 amount) internal {
@@ -93,7 +93,7 @@ contract RewardPool is ERC20, Ownable {
         _debts[account] += int256((amount * emissionPerShare) / 1e18);
     }
 
-    /// @notice Unstake account's token from pool.
+    /// @dev Unstake account's token from pool.
     /// @param account Receiver of the reward.
     /// @param amount The amount of token unstaked.
     function _unstake(address account, uint256 amount) internal {
@@ -101,7 +101,7 @@ contract RewardPool is ERC20, Ownable {
         _debts[account] -= int256((amount * emissionPerShare) / 1e18);
     }
 
-    /// @notice Extract rewards for account.
+    /// @dev Extract rewards for account.
     /// @param account Receiver of rewards.
     function _extract(address account) internal {
         updatePool();
