@@ -110,6 +110,6 @@ contract RewardPool is ERC20, Ownable {
         uint256 pendingReward = uint256(accumulatedReward - _debts[account]);
 
         _debts[account] = int128(accumulatedReward);
-        rewardToken.transferFrom(address(this), account, pendingReward);
+        rewardToken.transfer(account, pendingReward);
     }
 }
