@@ -75,13 +75,13 @@ contract RewardPool is ERC20, Ownable {
 
     /// @dev update debt balance on mint, burn, and transfer
     function _update(address from, address to, uint256 value) internal virtual override {
-        super._update(from, to, value);
         if (from != address(0)) {
             _unstake(from, value);
         }
         if (to != address(0)) {
             _stake(to, value);
         }
+        super._update(from, to, value);
     }
 
     /// @notice Stake amount under account to pool for reward allocation.
